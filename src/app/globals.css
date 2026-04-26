@@ -1,0 +1,94 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --font-display: 'Fraunces', Georgia, serif;
+  --font-sans: 'Inter Tight', system-ui, sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
+}
+
+* {
+  -webkit-tap-highlight-color: transparent;
+}
+
+html,
+body {
+  height: 100%;
+  background: #0a0a0c;
+  color: #f4f4f5;
+  font-family: var(--font-sans);
+  overscroll-behavior: none;
+}
+
+body {
+  background-image:
+    radial-gradient(at 12% 18%, rgba(255, 181, 71, 0.06) 0%, transparent 45%),
+    radial-gradient(at 85% 80%, rgba(217, 119, 6, 0.04) 0%, transparent 50%);
+}
+
+/* Scrollbar discret */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: #3a3a44;
+  border-radius: 3px;
+}
+
+/* MapLibre overrides pour coller au thème */
+.maplibregl-ctrl-attrib {
+  background: rgba(10, 10, 12, 0.7) !important;
+  color: #71717a !important;
+  font-size: 10px !important;
+}
+.maplibregl-ctrl-attrib a {
+  color: #a1a1aa !important;
+}
+
+/* Ligne grain subtil sur les surfaces premium */
+.grain {
+  position: relative;
+}
+.grain::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0.04;
+  mix-blend-mode: overlay;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+/* Champs de saisie premium */
+.field {
+  @apply w-full bg-ink-900/60 border border-ink-700 rounded-lg px-4 py-3
+         text-zinc-100 placeholder:text-zinc-600
+         focus:outline-none focus:border-amber-glow/50 focus:bg-ink-900/80
+         transition-all duration-200;
+}
+
+/* Boutons */
+.btn-primary {
+  @apply bg-gradient-to-b from-amber-glow to-amber-deep text-ink-950 font-semibold
+         px-5 py-3 rounded-lg shadow-lg shadow-amber-deep/20
+         hover:from-amber-glow hover:to-amber-glow disabled:opacity-30
+         disabled:cursor-not-allowed transition-all duration-200
+         active:scale-[0.98];
+}
+
+.btn-ghost {
+  @apply bg-ink-800/60 border border-ink-700 text-zinc-200
+         px-4 py-2.5 rounded-lg hover:bg-ink-700/80 hover:border-ink-600
+         transition-all duration-200 active:scale-[0.98];
+}
+
+/* Animation tracé itinéraire */
+@keyframes routeDraw {
+  from { stroke-dashoffset: 1000; }
+  to { stroke-dashoffset: 0; }
+}

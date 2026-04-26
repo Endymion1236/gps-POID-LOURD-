@@ -1,0 +1,58 @@
+import type { VehicleProfile } from '@/types';
+
+export const DEFAULT_PROFILES: VehicleProfile[] = [
+  {
+    id: 'van-chevaux',
+    name: 'Van à chevaux (2 places)',
+    emoji: '🐴',
+    height: 2.7,
+    width: 2.0,
+    length: 5.5,
+    weight: 2.5,
+  },
+  {
+    id: 'van-chevaux-3',
+    name: 'Van à chevaux (3 places)',
+    emoji: '🐴',
+    height: 2.85,
+    width: 2.1,
+    length: 6.5,
+    weight: 3.5,
+  },
+  {
+    id: 'fourgon',
+    name: 'Fourgon utilitaire',
+    emoji: '🚐',
+    height: 2.5,
+    width: 2.0,
+    length: 5.5,
+    weight: 3.5,
+  },
+  {
+    id: 'camion-7t',
+    name: 'Camion 7,5T',
+    emoji: '🚛',
+    height: 3.2,
+    width: 2.5,
+    length: 7.5,
+    weight: 7.5,
+  },
+  {
+    id: 'camion-19t',
+    name: 'Camion 19T',
+    emoji: '🚚',
+    height: 3.8,
+    width: 2.55,
+    length: 10.0,
+    weight: 19,
+  },
+  {
+    id: 'voiture-remorque',
+    name: 'Voiture + remorque',
+    emoji: '🚗',
+    height: 2.4,
+    width: 2.0,
+    length: 8.0,
+    weight: 3.5,
+  },
+];

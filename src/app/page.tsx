@@ -11,7 +11,6 @@ import { DEFAULT_PROFILES } from '@/lib/profiles';
 import { useLocalStorage } from '@/lib/useLocalStorage';
 import type { GeocodeResult, RouteResult, VehicleProfile } from '@/types';
 
-// Map chargée côté client uniquement (MapLibre GL = browser-only)
 const MapView = dynamic(() => import('@/components/MapView'), { ssr: false });
 
 export default function Home() {
@@ -66,7 +65,6 @@ export default function Home() {
         const { latitude, longitude } = pos.coords;
         setUserPos([longitude, latitude]);
 
-        // Reverse geocoding via Nominatim direct (le serveur ne sait pas faire reverse, on appelle l'API publique)
         try {
           const r = await fetch(
             `https://nominatim.openstreetmap.org/reverse?lat=${latitude}&lon=${longitude}&format=json&accept-language=fr`,
@@ -167,46 +165,42 @@ export default function Home() {
   }
 
   return (
-    <main className="fixed inset-0 overflow-hidden">
-      {/* Carte plein écran en arrière-plan */}
-      <MapView
-        start={startCoord}
-        end={endCoord}
-        routeGeometry={route?.geometry ?? null}
-        bbox={route?.bbox ?? null}
-        userPosition={userPos}
-      />
-
-      {/* Header glassmorphique */}
-      <header className="absolute top-0 left-0 right-0 z-10 px-4 pt-[max(1rem,env(safe-area-inset-top))] pb-3 bg-gradient-to-b from-ink-950 via-ink-950/80 to-transparent">
-        <div className="flex items-center justify-between">
-          <div className="flex items-baseline gap-2">
-            <h1 className="font-display text-2xl font-bold text-zinc-100 tracking-tight">
-              Route<span className="text-amber-glow">Haul</span>
-            </h1>
-            <span className="text-[10px] uppercase tracking-[0.2em] text-zinc-600">
-              v1
-            </span>
+    <main className="fixed inset-0 flex flex-col lg:flex-row overflow-hidden">
+      {/* ====== PANNEAU LATÉRAL (desktop) / OVERLAY (mobile) ====== */}
+      <aside className="lg:relative lg:w-[420px] lg:h-full lg:flex-shrink-0 lg:bg-ink-900 lg:border-r lg:border-ink-800 lg:flex lg:flex-col lg:z-20">
+        {/* Header */}
+        <header className="absolute lg:relative top-0 left-0 right-0 z-10 px-4 pt-[max(1rem,env(safe-area-inset-top))] pb-3 bg-gradient-to-b from-ink-950 via-ink-950/90 to-transparent lg:bg-none lg:border-b lg:border-ink-800 lg:pt-6 lg:pb-5">
+          <div className="flex items-center justify-between">
+            <div className="flex items-baseline gap-2">
+              <h1 className="font-display text-2xl lg:text-3xl font-bold text-zinc-100 tracking-tight">
+                Route<span className="text-amber-glow">Haul</span>
+              </h1>
+              <span className="text-[10px] uppercase tracking-[0.2em] text-zinc-600">
+                v1
+              </span>
+            </div>
+            <button
+              onClick={locateMe}
+              disabled={locating}
+              className="btn-ghost !p-2.5"
+              aria-label="Ma position"
+              title="Utiliser ma position"
+            >
+              {locating ? (
+                <Loader2 className="w-4 h-4 animate-spin" />
+              ) : (
+                <Crosshair className="w-4 h-4" />
+              )}
+            </button>
           </div>
-          <button
-            onClick={locateMe}
-            disabled={locating}
-            className="btn-ghost !p-2.5"
-            aria-label="Ma position"
-          >
-            {locating ? (
-              <Loader2 className="w-4 h-4 animate-spin" />
-            ) : (
-              <Crosshair className="w-4 h-4" />
-            )}
-          </button>
-        </div>
-      </header>
+          <p className="hidden lg:block text-xs text-zinc-500 mt-2">
+            Calcul d’itinéraire adapté au gabarit du véhicule.
+          </p>
+        </header>
 
-      {/* Panneau de contrôle */}
-      {!route && (
-        <section className="absolute top-16 left-3 right-3 sm:top-20 sm:left-4 sm:right-auto sm:w-[400px] z-10 bg-ink-900/85 backdrop-blur-xl border border-ink-700 rounded-2xl shadow-2xl shadow-black/60 grain animate-fade-up">
-          <div className="p-4 space-y-3">
+        {/* Panneau scrollable */}
+        <div className="absolute lg:relative top-16 lg:top-0 left-3 right-3 lg:left-0 lg:right-0 lg:flex-1 lg:overflow-y-auto z-10 bg-ink-900/85 lg:bg-transparent backdrop-blur-xl lg:backdrop-blur-0 border lg:border-0 border-ink-700 rounded-2xl lg:rounded-none shadow-2xl lg:shadow-none shadow-black/60 grain animate-fade-up">
+          <div className="p-4 lg:p-5 space-y-3">
             <AddressInput
               label="Départ"
               placeholder="Adresse de départ"
@@ -228,6 +222,7 @@ export default function Home() {
                 onClick={swap}
                 className="p-1.5 rounded-full bg-ink-800 border border-ink-700 hover:bg-ink-700 hover:border-ink-600 transition-colors"
                 aria-label="Inverser"
+                title="Inverser départ et arrivée"
               >
                 <ArrowDownUp className="w-3.5 h-3.5 text-zinc-400" />
               </button>
@@ -283,26 +278,37 @@ export default function Home() {
             )}
           </div>
 
-          <div className="px-4 py-2.5 border-t border-ink-700/60 text-[11px] text-zinc-600 leading-relaxed">
-            <span className="text-zinc-500 font-medium">Astuce :</span> mesure ton van{' '}
-            <em>chargé</em> avec ton plus grand cheval. C’est la hauteur réelle, pas
-            celle du constructeur.
-          </div>
-        </section>
-      )}
+          {!route && (
+            <div className="px-4 lg:px-5 py-3 border-t border-ink-700/60 text-[11px] text-zinc-600 leading-relaxed">
+              <span className="text-zinc-500 font-medium">Astuce :</span> mesure ton van{' '}
+              <em>chargé</em> avec ton plus grand cheval. C’est la hauteur réelle, pas
+              celle du constructeur.
+            </div>
+          )}
 
-      {/* Résumé après calcul */}
-      {route && (
-        <RouteSummary
-          route={route}
-          onClose={() => {
-            setRoute(null);
-            setError(null);
-          }}
+          {route && (
+            <RouteSummary
+              route={route}
+              onClose={() => {
+                setRoute(null);
+                setError(null);
+              }}
+            />
+          )}
+        </div>
+      </aside>
+
+      {/* ====== CARTE ====== */}
+      <section className="relative flex-1 min-h-0 lg:h-full bg-ink-950">
+        <MapView
+          start={startCoord}
+          end={endCoord}
+          routeGeometry={route?.geometry ?? null}
+          bbox={route?.bbox ?? null}
+          userPosition={userPos}
         />
-      )}
+      </section>
 
-      {/* Modale custom véhicule */}
       {customizing && (
         <VehicleCustomizer
           profile={profile}

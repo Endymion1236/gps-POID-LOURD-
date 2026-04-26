@@ -153,7 +153,7 @@ export default function MapView({ start, end, routeGeometry, bbox, userPosition 
   }, [bbox]);
 
   return (
-    <div ref={containerRef} className="absolute inset-0">
+    <div ref={containerRef} className="absolute inset-0 w-full h-full">
       <style jsx global>{`
         .rh-marker {
           width: 28px;

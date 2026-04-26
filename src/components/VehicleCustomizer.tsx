@@ -19,25 +19,34 @@ export default function VehicleCustomizer({ profile, onSave, onClose }: Props) {
 
   return (
     <div
-      className="fixed inset-0 z-50 bg-black/70 backdrop-blur-sm flex items-end sm:items-center justify-center p-0 sm:p-4 animate-fade-up"
+      className="fixed inset-0 z-50 backdrop-blur-sm flex items-end sm:items-center justify-center p-0 sm:p-4 animate-fade-up"
+      style={{ background: 'rgba(0, 0, 0, 0.6)' }}
       onClick={onClose}
     >
       <div
-        className="w-full sm:max-w-md bg-ink-900 border-t sm:border border-ink-700 rounded-t-2xl sm:rounded-2xl p-6 grain"
+        className="w-full sm:max-w-md rounded-t-2xl sm:rounded-2xl p-6 grain"
+        style={{
+          background: 'var(--bg-1)',
+          border: '1px solid var(--border)',
+        }}
         onClick={(e) => e.stopPropagation()}
       >
         <div className="flex items-start justify-between mb-6">
           <div>
-            <h2 className="font-display text-2xl font-semibold text-zinc-100">
+            <h2
+              className="font-display text-2xl font-semibold"
+              style={{ color: 'var(--text-1)' }}
+            >
               Mon véhicule
             </h2>
-            <p className="text-sm text-zinc-500 mt-1">
+            <p className="text-sm mt-1" style={{ color: 'var(--text-4)' }}>
               Adapte les dimensions à ton vrai gabarit chargé.
             </p>
           </div>
           <button
             onClick={onClose}
-            className="p-2 -mr-2 -mt-2 text-zinc-500 hover:text-zinc-300"
+            className="p-2 -mr-2 -mt-2 hover:opacity-70"
+            style={{ color: 'var(--text-4)' }}
             aria-label="Fermer"
           >
             <X className="w-5 h-5" />
@@ -46,7 +55,10 @@ export default function VehicleCustomizer({ profile, onSave, onClose }: Props) {
 
         <div className="space-y-4">
           <div>
-            <label className="block text-xs uppercase tracking-wider text-zinc-500 mb-1.5">
+            <label
+              className="block text-xs uppercase tracking-wider mb-1.5"
+              style={{ color: 'var(--text-4)' }}
+            >
               Nom du profil
             </label>
             <input
@@ -115,7 +127,10 @@ function NumberField({
 }) {
   return (
     <div>
-      <label className="block text-xs uppercase tracking-wider text-zinc-500 mb-1.5">
+      <label
+        className="block text-xs uppercase tracking-wider mb-1.5"
+        style={{ color: 'var(--text-4)' }}
+      >
         {label}
       </label>
       <input
@@ -126,7 +141,11 @@ function NumberField({
         value={value}
         onChange={(e) => onChange(parseFloat(e.target.value) || 0)}
       />
-      {hint && <p className="text-[11px] text-zinc-600 mt-1">{hint}</p>}
+      {hint && (
+        <p className="text-[11px] mt-1" style={{ color: 'var(--text-5)' }}>
+          {hint}
+        </p>
+      )}
     </div>
   );
 }
